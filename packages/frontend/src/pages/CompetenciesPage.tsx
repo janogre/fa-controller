@@ -23,7 +23,7 @@ function LevelBadge({ level, onClick }: { level: number; onClick?: () => void })
   return (
     <button
       onClick={onClick}
-      className={`w-8 h-8 rounded-md border text-xs font-mono font-semibold flex items-center justify-center
+      className={`w-8 h-8 rounded-md border text-xs font-mono font-semibold flex items-center justify-center mx-auto
                   transition-all hover:scale-110 ${levelColors[level] || "bg-surface text-muted border-b-subtle"}`}
       title={levelLabels[level]}
     >
@@ -36,7 +36,7 @@ function EmptyCell({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="w-8 h-8 rounded-md border border-dashed border-b-subtle text-muted/30 text-xs flex items-center justify-center
+      className="w-8 h-8 rounded-md border border-dashed border-b-subtle text-muted/30 text-xs flex items-center justify-center mx-auto
                  hover:border-fiber/30 hover:text-fiber/50 transition-all"
     >
       ·

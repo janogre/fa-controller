@@ -150,16 +150,24 @@ async function seed() {
     console.log("  ✅ Competency areas seeded");
   }
 
-  // Seed default admin user
+  // Seed default users
   const existingUsers = await db.select().from(users);
   if (existingUsers.length === 0) {
-    const passwordHash = await bcrypt.hash("admin", 12);
-    await db.insert(users).values({
-      username: "admin",
-      passwordHash,
-      displayName: "Fagansvarlig Teknologi",
-    });
-    console.log("  ✅ Default admin user created (username: admin, password: admin)");
+    const adminHash = await bcrypt.hash("admin", 12);
+    const jangHash = await bcrypt.hash("passord123", 12);
+    await db.insert(users).values([
+      {
+        username: "admin",
+        passwordHash: adminHash,
+        displayName: "Fagansvarlig Teknologi",
+      },
+      {
+        username: "jang",
+        passwordHash: jangHash,
+        displayName: "Jan G",
+      },
+    ]);
+    console.log("  ✅ Default users created (admin/admin, jang/passord123)");
   }
 
   // Seed default news sources

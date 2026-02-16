@@ -44,13 +44,13 @@ function StatCard({ icon: Icon, label, value, accent, delay, to }: {
   );
 }
 
-function CompetencyBar({ name, count, max }: { name: string; count: number; max: number }) {
-  const pct = max > 0 ? (count / max) * 100 : 0;
+function CompetencyBar({ name, avg, max }: { name: string; avg: number; max: number }) {
+  const pct = max > 0 ? (avg / max) * 100 : 0;
   return (
     <div className="group">
       <div className="flex items-center justify-between mb-1.5">
         <span className="text-sm text-t-default truncate mr-2">{name}</span>
-        <span className="font-mono text-xs text-muted">{count}</span>
+        <span className="font-mono text-xs text-muted">{avg > 0 ? avg.toFixed(1) : "—"}</span>
       </div>
       <div className="h-1.5 bg-surface rounded-full overflow-hidden">
         <div
@@ -165,14 +165,18 @@ export default function DashboardPage() {
 
           {stats.competencyAreas.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
-              {stats.competencyAreas.map((area) => (
-                <CompetencyBar
-                  key={area.id}
-                  name={area.name}
-                  count={area.ratings?.length || 0}
-                  max={stats.totalEmployees || 1}
-                />
-              ))}
+              {stats.competencyAreas.map((area) => {
+                const ratings = (area.ratings || []).map((r: { level: number }) => r.level);
+                const avg = ratings.length > 0 ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length : 0;
+                return (
+                  <CompetencyBar
+                    key={area.id}
+                    name={area.name}
+                    avg={avg}
+                    max={5}
+                  />
+                );
+              })}
             </div>
           ) : (
             <p className="text-sm text-muted text-center py-6">Ingen kompetanseområder registrert</p>

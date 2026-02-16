@@ -14,7 +14,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-void">
       <Sidebar />
-      <main className="ml-64 p-6 lg:p-8 min-h-screen">
+      <main className="ml-64 p-6 lg:p-8 min-h-screen radar-light">
         {children}
       </main>
     </div>

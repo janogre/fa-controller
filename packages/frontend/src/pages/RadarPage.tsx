@@ -918,7 +918,7 @@ export default function RadarPage() {
   }
 
   return (
-    <div className="radar-light space-y-5">
+    <div className="space-y-5">
       <style>{`
         @keyframes radar-sweep {
           from { transform: rotate(0deg); }

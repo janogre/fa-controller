@@ -153,9 +153,6 @@ body {
 
   background: var(--color-void);
   color: var(--color-text);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: -1rem;
 }
 
 .radar-light .card-panel {
