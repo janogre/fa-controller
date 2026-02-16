@@ -302,6 +302,23 @@ function RadarSvg({
       {/* Background */}
       <circle cx={center} cy={center} r={maxR} fill="url(#radarBg)" />
 
+      {/* Ring background fills – alternating shading for clear separation */}
+      {RINGS.slice().reverse().map((ring, revIdx) => {
+        const i = RINGS.length - 1 - revIdx;
+        const outerR = ((i + 1) / 4) * maxR;
+        const innerR = (i / 4) * maxR;
+        const isEven = i % 2 === 0;
+        return (
+          <path key={`ringbg-${ring.key}`}
+            d={innerR === 0
+              ? `M ${center + outerR} ${center} A ${outerR} ${outerR} 0 1 0 ${center - outerR} ${center} A ${outerR} ${outerR} 0 1 0 ${center + outerR} ${center} Z`
+              : `M ${center + outerR} ${center} A ${outerR} ${outerR} 0 1 0 ${center - outerR} ${center} A ${outerR} ${outerR} 0 1 0 ${center + outerR} ${center} Z M ${center + innerR} ${center} A ${innerR} ${innerR} 0 1 1 ${center - innerR} ${center} A ${innerR} ${innerR} 0 1 1 ${center + innerR} ${center} Z`}
+            fill={isEven ? "rgba(42,52,72,0.04)" : "rgba(42,52,72,0.0)"}
+            fillRule="evenodd"
+          />
+        );
+      })}
+
       {/* Quadrant background wedges – subtle colored fills */}
       {QUADRANTS.map((q, i) => {
         const startA = (i * 90 * Math.PI) / 180;
@@ -322,32 +339,38 @@ function RadarSvg({
         );
       })}
 
-      {/* Ring circles */}
+      {/* Ring circles – solid lines for clear separation */}
       {RINGS.map((ring, i) => {
         const r = ((i + 1) / 4) * maxR;
         const isHighlighted = highlightRing === ring.key;
         return (
           <circle key={ring.key} cx={center} cy={center} r={r}
-            fill="none" stroke={isHighlighted ? ring.color : "rgba(180,195,215,0.5)"}
-            strokeWidth={isHighlighted ? 1.5 : 0.8}
-            strokeDasharray={isHighlighted ? "none" : "4 8"}
-            opacity={isHighlighted ? 0.7 : 0.4}
+            fill="none" stroke={isHighlighted ? ring.color : "rgba(160,175,200,0.45)"}
+            strokeWidth={isHighlighted ? 2 : 1.2}
+            opacity={isHighlighted ? 0.8 : 1}
           />
         );
       })}
 
-      {/* Ring labels along diagonal */}
+      {/* Ring labels along diagonal – with background pill */}
       {RINGS.map((ring, i) => {
         const r = (i === 0 ? 0.5 : i + 0.5) / 4 * maxR;
         const angle = -45 * Math.PI / 180;
+        const lx = center + r * Math.cos(angle);
+        const ly = center + r * Math.sin(angle);
+        const labelWidth = ring.label.length * 7.5 + 12;
         return (
-          <text key={`rl-${ring.key}`}
-            x={center + r * Math.cos(angle)} y={center + r * Math.sin(angle)}
-            fill={ring.color} opacity={0.6} fontSize="10"
-            fontFamily="var(--font-mono)" textAnchor="middle" dominantBaseline="middle"
-            style={{ textTransform: "uppercase", letterSpacing: "0.12em" }}>
-            {ring.label}
-          </text>
+          <g key={`rl-${ring.key}`}>
+            <rect x={lx - labelWidth / 2} y={ly - 8} width={labelWidth} height={16} rx={4}
+              fill="rgba(244,246,250,0.88)" />
+            <text
+              x={lx} y={ly}
+              fill={ring.color} opacity={0.85} fontSize="10"
+              fontFamily="var(--font-mono)" fontWeight="600" textAnchor="middle" dominantBaseline="middle"
+              style={{ textTransform: "uppercase", letterSpacing: "0.12em" }}>
+              {ring.label}
+            </text>
+          </g>
         );
       })}
 
